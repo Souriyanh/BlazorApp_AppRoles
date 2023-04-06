@@ -9,10 +9,34 @@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthState { get; set; }
     private int currentCount = 0;
 
     private void IncrementCount()
     {
         currentCount++;
+    }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        var authState = await AuthState;
+        var user = authState.User;
+
+
+
+        if (user.IsInRole("Counter"))
+        {
+
+            Console.WriteLine("Break");
+        }
+        else
+
+        {
+            Console.WriteLine("Break");
+
+        }
+
     }
 }
