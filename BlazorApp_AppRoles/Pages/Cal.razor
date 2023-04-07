@@ -59,7 +59,7 @@
 
         // Get the user
         var user = (await authenticationStateTask).User;
-        var graphTimeZone = user.GetUserGraphTimeZone();
+        var graphTimeZone = "Eastern Standard Time";// user.GetUserGraphTimeZone();
         dateTimeFormat = $"{user.GetUserGraphDateFormat()} {user.GetUserGraphTimeFormat()}";
 
         // Calculate the start and end of the current week in user's time zone
@@ -67,6 +67,27 @@
         var endOfWeek = startOfWeek.AddDays(7);
 
         graphClient = clientFactory.GetAuthenticatedClient();
+
+
+        var requestbuilder = await graphClient.Me
+          .GetAsync(requestConfiguration =>
+          {
+              requestConfiguration.QueryParameters.Select = new string[] { "displayName", "jobTitle" };
+              Console.WriteLine("Break to see");
+          });
+
+        var DisplayName = requestbuilder.DisplayName;     
+
+       //  POST https://graph.microsoft.com/v1.0/me/calendars
+
+        var calendar = new Calendar
+            {
+                Name = "ILoveBeer"
+            };
+
+        var newCalendar = await graphClient.Me.Calendars
+            .PostAsync(calendar);
+
 
         var eventPage = await graphClient.Me
             .CalendarView
