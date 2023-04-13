@@ -72,11 +72,36 @@
         var requestbuilder = await graphClient.Me
           .GetAsync(requestConfiguration =>
           {
-              requestConfiguration.QueryParameters.Select = new string[] { "displayName", "jobTitle" };
+              requestConfiguration.QueryParameters.Select = new string[] { "AppRoles" };
               Console.WriteLine("Break to see");
           });
 
-        var DisplayName = requestbuilder.DisplayName;     
+        var DisplayName = requestbuilder.DisplayName;
+        // cont here
+
+        try
+        {
+            // Use the Object ID (338bf793-aeb2-4c23-a7a1-1a1bb5247398) , not the App ID (df2d12ea-2723-40ff-bec6-6a36a8157919)
+
+            var AppProperties = await graphClient.Applications["338bf793-aeb2-4c23-a7a1-1a1bb5247398"].GetAsync();
+           
+
+            var result = await graphClient.Applications["338bf793-aeb2-4c23-a7a1-1a1bb5247398"].GetAsync((requestConfiguration) =>
+            {
+                requestConfiguration.QueryParameters.Select = new string[] { "id", "appId", "displayName", "requiredResourceAccess" };
+                Console.WriteLine("Break to see  requestConfiguration");
+            });
+
+            Console.WriteLine("Break to see results");
+
+        }
+        catch (Exception ex)
+        {
+
+            Console.WriteLine("Error:" + ex.Message);
+        }
+     
+        Console.WriteLine("No Errors");
 
        //  POST https://graph.microsoft.com/v1.0/me/calendars
 
@@ -90,26 +115,26 @@
         //    .PostAsync(calendar);
 
 
-        var eventPage = await graphClient.Me
-            .CalendarView
-            .GetAsync(config =>
-            {
-                // Send user time zone in request so date/time in
-                // response will be in preferred time zone
-                config.Headers.Add("Prefer", $"outlook.timezone=\"{graphTimeZone}\"");
-                // Specifies the start and end of the view on the calendar
-                // Translates to: ?startDateTime=""&endDateTime=""
-                config.QueryParameters.StartDateTime = startOfWeek.ToString("o");
-                config.QueryParameters.EndDateTime = endOfWeek.ToString("o");
-                // Get max 50 per request
-                config.QueryParameters.Top = 50;
-                // Only return fields app will use
-                config.QueryParameters.Select = new [] { "subject", "organizer", "start", "end" };
-                // Order results chronologically
-                config.QueryParameters.Orderby = new [] { "start/dateTime" };
-            });
+        //var eventPage = await graphClient.Me
+        //    .CalendarView
+        //    .GetAsync(config =>
+        //    {
+        //        // Send user time zone in request so date/time in
+        //        // response will be in preferred time zone
+        //        config.Headers.Add("Prefer", $"outlook.timezone=\"{graphTimeZone}\"");
+        //        // Specifies the start and end of the view on the calendar
+        //        // Translates to: ?startDateTime=""&endDateTime=""
+        //        config.QueryParameters.StartDateTime = startOfWeek.ToString("o");
+        //        config.QueryParameters.EndDateTime = endOfWeek.ToString("o");
+        //        // Get max 50 per request
+        //        config.QueryParameters.Top = 50;
+        //        // Only return fields app will use
+        //        config.QueryParameters.Select = new [] { "subject", "organizer", "start", "end" };
+        //        // Order results chronologically
+        //        config.QueryParameters.Orderby = new [] { "start/dateTime" };
+        //    });
 
-        events = eventPage?.Value ?? new List<Event>();
+        //events = eventPage?.Value ?? new List<Event>();
     }
 
     private DateTime GetUtcStartOfWeekInTimeZone(DateTime today, string timeZoneId)
