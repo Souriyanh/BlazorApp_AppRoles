@@ -80,13 +80,14 @@
 
        //  POST https://graph.microsoft.com/v1.0/me/calendars
 
-        var calendar = new Calendar
-            {
-                Name = "ILoveBeer"
-            };
+       // hold off on write on Calendar. This is not the same as the app role write
+        //var calendar = new Calendar
+        //    {
+        //        Name = "ILoveBeer"
+        //    };
 
-        var newCalendar = await graphClient.Me.Calendars
-            .PostAsync(calendar);
+        //var newCalendar = await graphClient.Me.Calendars
+        //    .PostAsync(calendar);
 
 
         var eventPage = await graphClient.Me
