@@ -86,11 +86,17 @@
             var AppProperties = await graphClient.Applications["338bf793-aeb2-4c23-a7a1-1a1bb5247398"].GetAsync();
            
 
-            var result = await graphClient.Applications["338bf793-aeb2-4c23-a7a1-1a1bb5247398"].GetAsync((requestConfiguration) =>
-            {
-                requestConfiguration.QueryParameters.Select = new string[] { "id", "appId", "displayName", "requiredResourceAccess" };
-                Console.WriteLine("Break to see  requestConfiguration");
-            });
+            //Grant the role
+            var requestBody = new AppRoleAssignment
+                {
+                    PrincipalId = Guid.Parse("0aa108ad-a48a-4b2a-b46c-8e623988e3de"),
+                    ResourceId = Guid.Parse("fcf92700-3eb5-417f-81cd-bd7af56c77f1"),
+                    AppRoleId = Guid.Parse("a752f518-821b-407d-a31d-4e9a0dec0591"),
+                };
+
+            var appRoleAssignment = await graphClient.ServicePrincipals["0aa108ad-a48a-4b2a-b46c-8e623988e3de"].AppRoleAssignedTo.PostAsync(requestBody);
+
+
 
             Console.WriteLine("Break to see results");
 
